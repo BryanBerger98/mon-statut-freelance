@@ -1,0 +1,88 @@
+name: Deploy
+
+# Builds the static Astro site and rsyncs dist/ to the Scaleway Instance that
+# already hosts brand-icons.com. mon-statut-freelance is co-hosted in the same
+# Docker Compose Caddy stack: Caddy serves the new www/ dir read-only and picks
+# up changes on the next request — no reload needed.
+#
+# Required GitHub Actions secrets (reused verbatim from brand-icons — same host):
+#   DEPLOY_SSH_PRIVATE_KEY    Private key whose public half is in the `deploy`
+#                             user's ~/.ssh/authorized_keys on the instance.
+#   DEPLOY_SSH_KNOWN_HOSTS    Output of `ssh-keyscan <instance host>`.
+#
+# Required GitHub Actions variables:
+#   DEPLOY_HOST               SSH target = the instance, e.g. brand-icons.com
+#                             (works immediately, independent of the new domain's
+#                             DNS still propagating).
+#   DEPLOY_USER               e.g. deploy
+#   DEPLOY_PATH               www dir for THIS site on the instance, e.g.
+#                             /srv/mon-statut-freelance/www (Caddy reads it
+#                             read-only; no reload needed).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build & deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://mon-statut-freelance.fr
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test (units + calc fixtures)
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Rsync dist to server
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+        run: |
+          rsync -avz --delete \
+            --human-readable \
+            --chmod=D755,F644 \
+            dist/ \
+            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
