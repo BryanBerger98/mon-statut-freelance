@@ -50,7 +50,18 @@ const Simulator = () => {
   // Mobile-only editing toggle. When a ranking exists on a narrow viewport the form
   // condenses behind a sticky summary bar so the verdict leads above the fold
   // (spec change #1); on `lg` both columns show at once, so this flag is inert there.
+  // It starts `false` so a pre-filled URL opens straight on the verdict, and flips to
+  // `true` on the first manual edit (see `handleDraftChange`) so typing never collapses
+  // the form mid-input — the auto-condense only ever fires for URL-loaded simulations.
   const [isEditingMobile, setIsEditingMobile] = useState(false);
+
+  // Any manual edit means the user is filling the form, so keep it open on mobile.
+  // Distinguishes manual typing from a programmatic URL load (which never calls this),
+  // which is what lets a shared simulation still open on the verdict.
+  const handleDraftChange = (next: Draft) => {
+    setIsEditingMobile(true);
+    setDraft(next);
+  };
 
   const rankable = hasRankableInput(deferredDraft);
   const outcome = rankable ? computeOutcome(deferredDraft) : null;
@@ -82,7 +93,7 @@ const Simulator = () => {
             Voir le classement
           </Button>
         ) : null}
-        <QuestionnaireForm draft={draft} onChange={setDraft} />
+        <QuestionnaireForm draft={draft} onChange={handleDraftChange} />
       </div>
 
       <div className={cn('relative', resultsHiddenOnMobile ? 'hidden lg:block' : 'block')}>
