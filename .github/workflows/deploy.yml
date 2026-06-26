@@ -61,6 +61,11 @@ jobs:
         run: pnpm test
 
       - name: Build
+        env:
+          # Self-hosted Umami (cookieless analytics). Public values, so repo
+          # `vars`, not secrets. Unset → no tracking script is emitted.
+          PUBLIC_UMAMI_SRC: ${{ vars.PUBLIC_UMAMI_SRC }}
+          PUBLIC_UMAMI_WEBSITE_ID: ${{ vars.PUBLIC_UMAMI_WEBSITE_ID }}
         run: pnpm build
 
       - name: Configure SSH
