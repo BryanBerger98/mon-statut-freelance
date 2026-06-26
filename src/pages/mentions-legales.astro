@@ -1,0 +1,95 @@
+---
+/**
+ * Mentions légales — mandatory under the LCEN (Loi pour la Confiance dans
+ * l'Économie Numérique, art. 6 III). Editor is a micro-entrepreneur (personne
+ * physique) registered for VAT, so the page carries the entrepreneur's name,
+ * professional (domiciliation) address, SIRET and intra-EU VAT number, plus the
+ * host's full identification.
+ */
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { breadcrumbLd } from '@/lib/structured-data';
+
+const breadcrumbs = [{ label: 'Accueil', href: '/' }, { label: 'Mentions légales' }];
+
+const jsonLd = breadcrumbLd([{ name: 'Accueil', url: new URL('/', Astro.site).href }, { name: 'Mentions légales' }]);
+---
+
+<ContentLayout
+  title="Mentions légales"
+  description="Éditeur, directeur de la publication et hébergeur du site Mon statut freelance, conformément à la loi pour la confiance dans l'économie numérique."
+  breadcrumbs={breadcrumbs}
+  jsonLd={jsonLd}
+>
+  <p>
+    Conformément à l'article 6 III de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN),
+    voici les informations relatives à l'éditeur et à l'hébergeur du site <strong>mon-statut-freelance.fr</strong>.
+  </p>
+
+  <h2>Éditeur du site</h2>
+  <p>Le site est édité par&nbsp;:</p>
+  <ul>
+    <li><strong>Bryan Berger</strong>, entrepreneur individuel sous le régime de la micro-entreprise.</li>
+    <li>Adresse&nbsp;: 60 rue François 1er, 75008 Paris (domiciliation chez LegalPlace).</li>
+    <li>SIRET&nbsp;: 838&nbsp;388&nbsp;205&nbsp;00034.</li>
+    <li>Adresse électronique&nbsp;: <a href="mailto:contact@bryanberger.dev">contact@bryanberger.dev</a></li>
+    <li>Numéro de TVA intracommunautaire&nbsp;: FR23838388205.</li>
+  </ul>
+
+  <h2>Directeur de la publication</h2>
+  <p>Le directeur de la publication est <strong>Bryan Berger</strong>, en sa qualité d'éditeur du site.</p>
+
+  <h2>Hébergeur</h2>
+  <p>Le site est hébergé par&nbsp;:</p>
+  <ul>
+    <li><strong>Scaleway SAS</strong>, société par actions simplifiée au capital de 142&nbsp;050&nbsp;euros.</li>
+    <li>Siège social&nbsp;: 8 rue de la Ville-l'Évêque, 75008 Paris, France.</li>
+    <li>Immatriculée au RCS de Paris sous le numéro 433&nbsp;115&nbsp;904.</li>
+    <li>Numéro de TVA intracommunautaire&nbsp;: FR 35 433115904.</li>
+    <li>Téléphone&nbsp;: +33 1 84 13 00 00.</li>
+  </ul>
+  <p>Les serveurs hébergeant le site sont localisés en France (région <code>fr-par-1</code>, Paris).</p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    Sauf mention contraire, les contenus rédactionnels (textes, structure éditoriale, choix et présentation des informations)
+    publiés sur ce site sont la propriété de l'éditeur et sont protégés par le droit d'auteur. Toute reproduction,
+    représentation ou diffusion, totale ou partielle, sans autorisation préalable, est interdite.
+  </p>
+  <p>
+    Le code source du site est publié sur
+    <a href="https://github.com/BryanBerger98/mon-statut-freelance" target="_blank" rel="noopener noreferrer">GitHub</a>&nbsp;;
+    sa réutilisation est régie par la licence figurant dans le dépôt. Les marques, logos et dénominations des statuts
+    juridiques cités le sont à titre informatif et restent la propriété de leurs titulaires respectifs.
+  </p>
+
+  <h2>Nature des informations et responsabilité</h2>
+  <p>
+    Mon statut freelance est un simulateur gratuit qui compare les statuts juridiques du freelance en France pour l'année de
+    référence 2026. Les résultats affichés sont des <strong>estimations indicatives</strong>, fondées sur des barèmes publics
+    et des hypothèses explicites&nbsp;; ils ne constituent pas un conseil juridique, fiscal ou comptable personnalisé. Pour
+    toute décision engageante, il convient de consulter un professionnel qualifié (expert-comptable, avocat).
+  </p>
+  <p>
+    L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées, sans pouvoir en garantir
+    l'exhaustivité ni l'absence d'erreur. Sa responsabilité ne saurait être engagée pour les décisions prises sur la seule
+    base des résultats du simulateur.
+  </p>
+
+  <h2>Liens hypertextes</h2>
+  <p>
+    Le site peut contenir des liens vers des sites tiers (notamment le dépôt de code sur GitHub). L'éditeur n'exerce aucun
+    contrôle sur ces sites et décline toute responsabilité quant à leur contenu ou à leur politique de confidentialité.
+  </p>
+
+  <h2>Données personnelles</h2>
+  <p>
+    Le site ne collecte aucune donnée personnelle et n'utilise aucun cookie ni traceur. Les modalités de traitement des
+    données sont détaillées dans la <a href="/politique-de-confidentialite/">politique de confidentialité</a>.
+  </p>
+
+  <h2>Droit applicable</h2>
+  <p>
+    Les présentes mentions légales sont régies par le droit français. Tout litige relatif à l'utilisation du site relève de la
+    compétence des juridictions françaises.
+  </p>
+</ContentLayout>

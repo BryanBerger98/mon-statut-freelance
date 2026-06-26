@@ -1,0 +1,99 @@
+---
+/**
+ * Politique de confidentialité (RGPD). The site is fully static, collects no
+ * personal data, sets no cookie or tracker, self-hosts its fonts and runs the
+ * simulator entirely client-side (state encoded in the URL, never transmitted).
+ * The only personal-data processing is the host's technical server logs.
+ *
+ * `updated` drives the "Mis à jour le" line; bump it whenever the policy changes.
+ */
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { breadcrumbLd } from '@/lib/structured-data';
+
+const breadcrumbs = [{ label: 'Accueil', href: '/' }, { label: 'Politique de confidentialité' }];
+
+const jsonLd = breadcrumbLd([
+  { name: 'Accueil', url: new URL('/', Astro.site).href },
+  { name: 'Politique de confidentialité' },
+]);
+---
+
+<ContentLayout
+  title="Politique de confidentialité"
+  description="Mon statut freelance ne collecte aucune donnée personnelle, n'utilise aucun cookie ni traceur. Le simulateur fonctionne entièrement dans votre navigateur."
+  updated="2026-06-26"
+  breadcrumbs={breadcrumbs}
+  jsonLd={jsonLd}
+>
+  <p>
+    Cette politique explique comment le site <strong>mon-statut-freelance.fr</strong> traite vos données, conformément au
+    Règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés. En résumé&nbsp;:
+    <strong>le site ne collecte aucune donnée personnelle</strong> et n'utilise ni cookie ni traceur.
+  </p>
+
+  <h2>Responsable du traitement</h2>
+  <p>
+    Le responsable du traitement est <strong>Bryan Berger</strong>, éditeur du site (voir les
+    <a href="/mentions-legales/">mentions légales</a>). Pour toute question relative à vos données&nbsp;:
+    <a href="mailto:contact@bryanberger.dev">contact@bryanberger.dev</a>.
+  </p>
+
+  <h2>Aucune collecte de données personnelles</h2>
+  <p>
+    Le site est un site statique, sans compte utilisateur, sans formulaire d'inscription et sans espace de connexion. Il ne
+    demande, ne collecte et ne stocke <strong>aucune donnée personnelle</strong>&nbsp;: ni nom, ni adresse électronique, ni
+    coordonnées. Aucune mesure d'audience ni outil d'analyse comportementale n'est utilisé.
+  </p>
+
+  <h2>Données saisies dans le simulateur</h2>
+  <p>
+    Les chiffres que vous renseignez dans le simulateur (chiffre d'affaires, charges, situation familiale) sont traités
+    <strong>exclusivement dans votre navigateur</strong>. Ils sont encodés dans l'adresse (URL) de la page afin de vous
+    permettre de recharger ou de partager votre simulation. Ces informations ne sont <strong>jamais transmises ni stockées
+    sur un serveur</strong> et disparaissent lorsque vous quittez la page — sauf si vous conservez ou partagez vous-même
+    l'URL correspondante.
+  </p>
+
+  <h2>Cookies et traceurs</h2>
+  <p>
+    Le site n'utilise <strong>aucun cookie</strong> et <strong>aucun traceur</strong> (ni publicitaire, ni statistique, ni
+    de réseau social). Aucun consentement n'est donc requis et aucun bandeau cookie n'est affiché.
+  </p>
+
+  <h2>Ressources externes</h2>
+  <p>
+    Les polices de caractères sont hébergées directement sur le site&nbsp;: aucune ressource n'est chargée depuis un service
+    tiers (pas de Google Fonts, pas de service de mesure, pas de réseau de diffusion de contenu externe). Votre adresse IP
+    n'est donc transmise à aucun tiers lors de la navigation. Le site contient un lien vers
+    <a href="https://github.com/BryanBerger98/mon-statut-freelance" target="_blank" rel="noopener noreferrer">GitHub</a>&nbsp;;
+    si vous le suivez, la politique de confidentialité de ce service tiers s'applique.
+  </p>
+
+  <h2>Journaux techniques de l'hébergeur</h2>
+  <p>
+    Pour assurer le fonctionnement et la sécurité du serveur, l'hébergeur <strong>Scaleway SAS</strong> peut conserver des
+    journaux techniques contenant des données telles que l'adresse IP, la date et l'heure de la requête, les pages consultées
+    et le type de navigateur. Ce traitement repose sur l'<strong>intérêt légitime</strong> de l'éditeur et de l'hébergeur à
+    garantir la disponibilité et la sécurité du site (article 6.1.f du RGPD). Ces journaux sont conservés pour une durée
+    limitée. Les serveurs sont situés en France&nbsp;: aucune donnée n'est transférée en dehors de l'Union européenne.
+  </p>
+
+  <h2>Vos droits</h2>
+  <p>
+    Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de
+    portabilité concernant vos données. Le site ne collectant aucune donnée personnelle, ces droits s'exercent principalement
+    auprès de l'hébergeur pour les journaux techniques. Pour toute demande, vous pouvez écrire à
+    <a href="mailto:contact@bryanberger.dev">contact@bryanberger.dev</a>.
+  </p>
+  <p>
+    Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la Commission
+    nationale de l'informatique et des libertés (CNIL),
+    <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>.
+  </p>
+
+  <h2>Modifications</h2>
+  <p>
+    Cette politique de confidentialité peut être amenée à évoluer. La date de dernière mise à jour est indiquée en haut de
+    cette page.
+  </p>
+</ContentLayout>
