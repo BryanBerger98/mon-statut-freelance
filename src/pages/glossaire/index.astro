@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/breadcrumb.astro';
+import Icon from '@/components/icon.astro';
+import { breadcrumbLd } from '@/lib/structured-data';
+
+const terms = (await getCollection('glossaire')).sort((a, b) => a.data.title.localeCompare(b.data.title, 'fr'));
+
+const jsonLd = breadcrumbLd([
+  { name: 'Accueil', url: new URL('/', Astro.site).href },
+  { name: 'Glossaire' },
+]);
+---
+
+<BaseLayout
+  title="Glossaire fiscal et social du freelance"
+  description="Les termes clés de la fiscalité et des cotisations du freelance expliqués simplement : cotisations sociales, abattement, IS, dividendes, et plus."
+  jsonLd={jsonLd}
+>
+  <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
+    <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Glossaire' }]} />
+
+    <h1 class="font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">Glossaire</h1>
+    <p class="mt-4 max-w-2xl text-lg text-pretty text-lecture">
+      Les notions de fiscalité et de cotisations qui reviennent dans le
+      <a class="font-medium text-france underline-offset-4 hover:underline" href="/comparateur/">simulateur</a>,
+      expliquées en français simple.
+    </p>
+
+    {
+      terms.length === 0 ? (
+        <p class="mt-10 text-lecture">Le glossaire arrive bientôt.</p>
+      ) : (
+        <ul class="mt-10 space-y-4">
+          {terms.map((term) => (
+            <li>
+              <a
+                href={`/glossaire/${term.id}/`}
+                class="group/card flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-france/30 hover:shadow-[var(--glass-shadow)]"
+              >
+                <span class="font-heading font-semibold text-encre">{term.data.title}</span>
+                <span class="mt-1.5 text-sm text-lecture">{term.data.description}</span>
+                <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-france opacity-0 transition-opacity group-hover/card:opacity-100">
+                  Lire la définition
+                  <Icon name="arrow-right" size={14} />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+</BaseLayout>

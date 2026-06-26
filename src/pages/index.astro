@@ -1,0 +1,301 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/icon.astro';
+import { STATUS_META } from '@/features/simulator/status-meta';
+import { faqPageLd } from '@/lib/structured-data';
+import type { IconName } from '@/components/icons';
+
+const statuses = Object.values(STATUS_META);
+
+const eur = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+/**
+ * "Le Palmarès" — the signature glass leaderboard, shown as an ILLUSTRATIVE
+ * preview. These euros are placeholders for layout only: NOT barèmes, never
+ * imported by the calc engine (`src/domain/`), never authoritative. The badge and
+ * footnote make this explicit; real figures are computed by the simulator on the
+ * user's own inputs.
+ */
+const exemplePalmares = {
+  profil: 'Développeur web · 60 000 € de CA · 8 000 € de charges · célibataire',
+  lignes: [
+    { statusId: 'eurl-is', net: 41320 },
+    { statusId: 'micro-entreprise', net: 40180 },
+    { statusId: 'sasu-is', net: 39450 },
+    { statusId: 'eurl-ir', net: 38920 },
+    { statusId: 'ei-reel', net: 38510 },
+    { statusId: 'sasu-ir', net: 37600 },
+    { statusId: 'portage-salarial', net: 33240 },
+  ],
+} as const;
+
+const [tete] = exemplePalmares.lignes;
+
+const steps: { icon: IconName; title: string; body: string }[] = [
+  {
+    icon: 'pencil-line',
+    title: 'Saisissez vos chiffres',
+    body: "Chiffre d'affaires par type d'activité, charges réelles, situation familiale et personnes à charge.",
+  },
+  {
+    icon: 'list-ordered',
+    title: 'Obtenez un classement chiffré',
+    body: 'Les 7 statuts sont classés par revenu disponible après cotisations sociales et impôt, avec une recommandation argumentée.',
+  },
+  {
+    icon: 'trending-up',
+    title: 'Anticipez et arbitrez',
+    body: "Simulez l'évolution de votre activité et comparez le coût/bénéfice d'un changement de statut.",
+  },
+];
+
+const reassurance: { icon: IconName; label: string }[] = [
+  { icon: 'badge-euro', label: '100 % gratuit' },
+  { icon: 'shield-check', label: 'Sans inscription ni collecte de données' },
+  { icon: 'calendar-check', label: 'Chiffres de référence 2026' },
+];
+
+// Qualitative FAQ — no figures (numbers live only in the calc engine). Reused as
+// FAQPage structured data in the SEO phase.
+const faq = [
+  {
+    q: 'Quel statut juridique choisir quand on est freelance ?',
+    a: "Il n'y a pas de statut universellement meilleur : le plus avantageux dépend de votre chiffre d'affaires, du niveau de vos charges, de votre situation familiale et de vos priorités (revenu net, protection sociale, simplicité). Le simulateur les classe sur vos chiffres réels.",
+  },
+  {
+    q: 'Micro-entreprise ou entreprise individuelle au réel ?',
+    a: "La micro-entreprise calcule cotisations et impôt sur le chiffre d'affaires après un abattement forfaitaire ; l'EI au réel impose le bénéfice après déduction des charges réelles. Le réel devient plus intéressant lorsque vos charges professionnelles sont élevées.",
+  },
+  {
+    q: 'Quand passer en société (EURL ou SASU) ?',
+    a: "Le passage en société se justifie souvent quand le revenu augmente, quand vous voulez séparer patrimoine personnel et professionnel, ou arbitrer entre rémunération et dividendes. C'est un arbitrage chiffré que le simulateur rend explicite.",
+  },
+  {
+    q: 'Quelle différence entre EURL et SASU ?',
+    a: "La principale différence est le régime social du dirigeant : l'EURL relève du régime des travailleurs non salariés (cotisations plus faibles), la SASU du régime assimilé-salarié (protection sociale plus complète, cotisations plus élevées). Aucun des deux n'ouvre droit à l'assurance chômage.",
+  },
+  {
+    q: 'Le portage salarial, pour qui ?',
+    a: "Le portage convient à ceux qui veulent une protection sociale complète, assurance chômage incluse, sans créer ni gérer de structure. En contrepartie, le revenu net est généralement le plus faible des sept statuts.",
+  },
+  {
+    q: 'Le simulateur est-il vraiment gratuit ?',
+    a: "Oui : le simulateur est entièrement gratuit, sans création de compte ni collecte de vos données. Les résultats restent des estimations indicatives et ne remplacent pas un conseil personnalisé.",
+  },
+];
+
+const jsonLd = faqPageLd(faq);
+---
+
+<BaseLayout
+  title="Comparez les statuts freelance — Simulateur gratuit 2026"
+  description="Comparez gratuitement micro-entreprise, EI, EURL, SASU et portage salarial. Classement chiffré par revenu disponible, adapté à votre situation."
+  jsonLd={jsonLd}
+>
+  <!-- Hero — shares the brume-field container with the floating header (see
+       BaseLayout `hero` slot), so the backdrop runs to the page top behind the pill. -->
+  <section slot="hero">
+    <div
+      class="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-10 pb-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pt-16 lg:pb-24"
+    >
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full border border-france/15 bg-white/60 px-3 py-1 text-xs font-medium text-france">
+            <Icon name="sparkles" size={14} />
+            Comparateur gratuit · 7 statuts
+          </p>
+          <h1 class="mt-5 font-heading text-4xl leading-[1.05] font-extrabold tracking-tight text-balance text-encre sm:text-5xl lg:text-[3.4rem]">
+            Quel statut freelance vous rapporte <span class="text-france">le plus</span> ?
+          </h1>
+          <p class="mt-5 max-w-xl text-lg text-pretty text-lecture">
+            Entrez vos chiffres, obtenez un classement par <strong class="font-semibold text-encre">revenu disponible</strong> — après
+            cotisations sociales et impôt. Micro-entreprise, EI, EURL, SASU, portage : tous comparés, sur votre situation réelle.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href="/comparateur/"
+              class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-france px-7 text-base font-semibold text-white shadow-[var(--glass-shadow)] transition-colors hover:bg-france-hover"
+            >
+              Lancer le simulateur
+              <Icon name="arrow-right" size={18} />
+            </a>
+            <a href="/statuts/" class="text-base font-medium text-france underline-offset-4 hover:underline"> Voir les 7 statuts </a>
+          </div>
+          <ul class="mt-8 flex flex-col gap-2.5 text-sm text-lecture sm:flex-row sm:flex-wrap sm:gap-x-6">
+            {
+              reassurance.map((item) => (
+                <li class="flex items-center gap-2">
+                  <Icon name={item.icon} size={16} class="text-france" />
+                  {item.label}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <!-- Le Palmarès -->
+        <div class="glass-card overflow-hidden rounded-3xl">
+          <div class="p-5 sm:p-6">
+            <div class="flex items-center justify-between gap-3">
+              <p class="font-heading text-sm font-bold tracking-tight text-encre">Le palmarès</p>
+              <span class="inline-flex items-center rounded-full bg-france/10 px-2.5 py-0.5 text-xs font-semibold text-france"> Exemple </span>
+            </div>
+            <p class="mt-1 text-xs text-mention">{exemplePalmares.profil}</p>
+
+            <ol class="mt-4 space-y-1.5">
+              {
+                exemplePalmares.lignes.map((ligne, index) => {
+                  const meta = STATUS_META[ligne.statusId];
+                  const ecart = ligne.net - tete.net;
+                  const isTete = index === 0;
+                  return (
+                    <li
+                      class:list={[
+                        'flex items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors',
+                        isTete ? 'border border-marianne/30 bg-white/70' : 'hover:bg-white/50',
+                      ]}
+                    >
+                      <span
+                        class:list={[
+                          'flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold',
+                          isTete ? 'bg-marianne text-white' : 'bg-france/10 text-france',
+                        ]}
+                      >
+                        {isTete ? <Icon name="crown" size={15} title="Statut le mieux classé" /> : index + 1}
+                      </span>
+                      <span class="min-w-0 flex-1">
+                        <span class="block truncate text-sm font-semibold text-encre">{meta.label}</span>
+                        <span class="block truncate text-xs text-mention">{meta.regimeSocial}</span>
+                      </span>
+                      <span class="shrink-0 text-right">
+                        <span class="block font-mono text-sm font-semibold text-encre">{eur.format(ligne.net)}</span>
+                        <span
+                          class:list={['block font-mono text-xs', isTete ? 'font-semibold text-france' : 'text-mention']}
+                        >
+                          {isTete ? 'le mieux classé' : eur.format(ecart)}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })
+              }
+            </ol>
+
+            <p class="mt-4 flex items-start gap-2 border-t border-border pt-4 text-xs text-mention">
+              <Icon name="info" size={14} class="mt-0.5 shrink-0" />
+              Chiffres illustratifs. Vos montants sont calculés sur votre situation réelle — ceci n'est pas un conseil personnalisé.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <main class="flex-1">
+    <!-- Comment ça marche -->
+    <section class="mx-auto max-w-5xl px-4 py-16 lg:py-20">
+      <h2 class="text-center font-heading text-3xl font-bold tracking-tight text-encre">Comment ça marche</h2>
+      <p class="mx-auto mt-3 max-w-xl text-center text-lecture">Trois étapes, aucune inscription. Vous gardez la main sur vos chiffres.</p>
+      <ol class="mt-10 grid gap-5 sm:grid-cols-3">
+        {
+          steps.map((step, index) => (
+            <li class="rounded-2xl border border-border bg-card p-6">
+              <div class="flex items-center gap-3">
+                <span class="flex size-11 items-center justify-center rounded-2xl bg-france/10 text-france">
+                  <Icon name={step.icon} size={22} />
+                </span>
+                <span class="font-mono text-sm font-semibold text-mention">0{index + 1}</span>
+              </div>
+              <p class="mt-4 font-heading text-lg font-semibold text-encre">{step.title}</p>
+              <p class="mt-1.5 text-sm text-lecture">{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- Les statuts -->
+    <section class="border-y border-border brume-field">
+      <div class="mx-auto max-w-5xl px-4 py-16 lg:py-20">
+        <div class="flex items-end justify-between gap-4">
+          <div>
+            <h2 class="font-heading text-3xl font-bold tracking-tight text-encre">Les 7 statuts, en clair</h2>
+            <p class="mt-2 max-w-lg text-lecture">Chacun a ses règles et son public. Le simulateur, lui, tranche sur vos chiffres.</p>
+          </div>
+          <a
+            class="hidden shrink-0 items-center gap-1.5 text-sm font-semibold text-france underline-offset-4 hover:underline sm:inline-flex"
+            href="/statuts/"
+          >
+            Tout voir
+            <Icon name="arrow-right" size={15} />
+          </a>
+        </div>
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            statuses.map((status) => (
+              <li>
+                <a
+                  href={`/statuts/${status.id}/`}
+                  class="group/card flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-france/30 hover:shadow-[var(--glass-shadow)]"
+                >
+                  <span class="inline-flex w-fit rounded-full bg-france/8 px-2.5 py-0.5 text-xs font-medium text-france">
+                    {status.regimeSocial}
+                  </span>
+                  <span class="mt-3 font-heading font-semibold text-encre">{status.label}</span>
+                  <span class="mt-1 flex-1 text-sm text-lecture">{status.tagline}</span>
+                  <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-france opacity-0 transition-opacity group-hover/card:opacity-100">
+                    En savoir plus
+                    <Icon name="arrow-right" size={14} />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mx-auto max-w-3xl px-4 py-16 lg:py-20">
+      <h2 class="font-heading text-3xl font-bold tracking-tight text-encre">Questions fréquentes</h2>
+      <dl class="mt-8 space-y-3">
+        {
+          faq.map((item) => (
+            <div class="overflow-hidden rounded-2xl border border-border bg-card">
+              <details class="group/faq">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-heading font-semibold text-encre [&::-webkit-details-marker]:hidden">
+                  <dt>{item.q}</dt>
+                  <Icon
+                    name="chevron-down"
+                    size={18}
+                    class="shrink-0 text-mention transition-transform group-open/faq:rotate-180"
+                  />
+                </summary>
+                <dd class="px-5 pb-5 text-sm text-lecture">{item.a}</dd>
+              </details>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <!-- Closing CTA -->
+    <section class="px-4 pb-20">
+      <div class="glass-card mx-auto max-w-4xl overflow-hidden rounded-3xl text-center">
+        <div class="px-6 py-12 sm:py-16">
+          <h2 class="mx-auto max-w-2xl font-heading text-3xl font-bold tracking-tight text-balance text-encre">
+            Votre classement vous attend.
+          </h2>
+          <p class="mx-auto mt-3 max-w-xl text-pretty text-lecture">
+            Quelques chiffres suffisent pour obtenir votre palmarès personnalisé et une recommandation argumentée.
+          </p>
+          <a
+            href="/comparateur/"
+            class="mt-7 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-france px-7 text-base font-semibold text-white shadow-[var(--glass-shadow)] transition-colors hover:bg-france-hover"
+          >
+            Lancer le simulateur
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

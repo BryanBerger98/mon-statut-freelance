@@ -1,0 +1,38 @@
+---
+/**
+ * Breadcrumb — shared "fil d'Ariane" chrome (components.md §2.2: used by 2+ pages).
+ * The last crumb is the current page: no `href`, marked `aria-current="page"`.
+ * Mirrors the landing's DSFR palette — `text-mention` links resolving to `france`
+ * on hover, a faint `chevron-right` separator. Pure static markup, no JS.
+ */
+import Icon from '@/components/icon.astro';
+
+type Crumb = { label: string; href?: string | undefined };
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Fil d'Ariane" class="mb-6 text-sm text-mention">
+  <ol class="flex flex-wrap items-center gap-1.5">
+    {
+      items.map((crumb, index) => (
+        <li class="flex items-center gap-1.5">
+          {crumb.href ? (
+            <a class="transition-colors hover:text-france" href={crumb.href}>
+              {crumb.label}
+            </a>
+          ) : (
+            <span aria-current="page" class="font-medium text-encre">
+              {crumb.label}
+            </span>
+          )}
+          {index < items.length - 1 ? <Icon name="chevron-right" size={14} class="text-mention/60" /> : null}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

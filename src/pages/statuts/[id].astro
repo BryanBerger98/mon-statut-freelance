@@ -1,0 +1,133 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/breadcrumb.astro';
+import Icon from '@/components/icon.astro';
+import { STATUS_META, type StatusMeta } from '@/features/simulator/status-meta';
+import { breadcrumbLd } from '@/lib/structured-data';
+
+export const getStaticPaths = () =>
+  Object.values(STATUS_META).map((meta) => ({ params: { id: meta.id }, props: { meta } }));
+
+interface Props {
+  meta: StatusMeta;
+}
+
+const { meta } = Astro.props;
+
+const facts = [
+  { label: 'Régime social', value: meta.regimeSocial },
+  { label: 'Fiscalité', value: meta.fiscalite },
+];
+
+const jsonLd = breadcrumbLd([
+  { name: 'Accueil', url: new URL('/', Astro.site).href },
+  { name: 'Statuts', url: new URL('/statuts/', Astro.site).href },
+  { name: meta.label },
+]);
+---
+
+<BaseLayout
+  title={`${meta.label} : régime, fiscalité, création`}
+  description={meta.tagline}
+  jsonLd={jsonLd}
+>
+  <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
+    <Breadcrumb
+      items={[{ label: 'Accueil', href: '/' }, { label: 'Statuts', href: '/statuts/' }, { label: meta.label }]}
+    />
+
+    <article>
+      <header class="border-b border-border pb-6">
+        <h1 class="font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">{meta.label}</h1>
+        <p class="mt-3 text-lg text-pretty text-lecture">{meta.tagline}</p>
+      </header>
+
+      <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+        {
+          facts.map((fact) => (
+            <div class="rounded-2xl border border-border bg-card p-4">
+              <dt class="text-xs font-medium uppercase tracking-wide text-mention">{fact.label}</dt>
+              <dd class="mt-1 text-sm font-medium text-encre">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <section class="mt-10">
+        <h2 class="font-heading text-xl font-semibold text-encre">Avantages</h2>
+        <ul class="mt-4 space-y-2.5">
+          {
+            meta.avantages.map((item) => (
+              <li class="flex items-start gap-3 text-sm text-lecture">
+                <span class="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-france/10 text-france">
+                  <Icon name="check" size={13} />
+                </span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="mt-10">
+        <h2 class="font-heading text-xl font-semibold text-encre">Inconvénients</h2>
+        <ul class="mt-4 space-y-2.5">
+          {
+            meta.inconvenients.map((item) => (
+              <li class="flex items-start gap-3 text-sm text-lecture">
+                <span class="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-marianne/10 text-marianne">
+                  <Icon name="x" size={13} />
+                </span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="mt-10">
+        <h2 class="font-heading text-xl font-semibold text-encre">Comment créer ce statut ?</h2>
+        <ol class="mt-4 space-y-3">
+          {
+            meta.setupSteps.map((step, index) => (
+              <li class="flex items-start gap-3 text-sm text-lecture">
+                <span class="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-france/10 text-xs font-bold text-france">
+                  {index + 1}
+                </span>
+                <span>{step}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+    </article>
+
+    <aside class="mt-12 rounded-3xl border border-border brume-field p-6 sm:p-8">
+      <p class="font-heading text-lg font-semibold text-encre">Ce statut est-il le plus avantageux pour vous ?</p>
+      <p class="mt-2 text-sm text-lecture">
+        Les chiffres dépendent de votre activité. Le simulateur place {meta.label} dans un classement personnalisé par revenu
+        disponible.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a
+          href="/comparateur/"
+          class="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-france px-6 text-sm font-semibold text-white shadow-[var(--glass-shadow)] transition-colors hover:bg-france-hover"
+        >
+          Comparer sur mes chiffres
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a
+          href="/statuts/"
+          class="inline-flex h-11 items-center justify-center rounded-full border border-france/20 bg-white/60 px-6 text-sm font-semibold text-france transition-colors hover:border-france/40 hover:bg-white"
+        >
+          Voir les autres statuts
+        </a>
+      </div>
+    </aside>
+
+    <p class="mt-8 text-xs text-mention">
+      Cette fiche est une présentation générale, à jour pour 2026. Elle ne constitue pas un conseil juridique ou fiscal
+      personnalisé.
+    </p>
+  </main>
+</BaseLayout>

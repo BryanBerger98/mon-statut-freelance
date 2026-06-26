@@ -1,0 +1,127 @@
+---
+/**
+ * ContentLayout — wraps a rendered MDX entry (guides, glossaire) with a breadcrumb,
+ * a frontmatter-driven header (single <h1>, seo.md §1.5) and prose styling, then a
+ * back-to-simulator call to action so no editorial page is an orphan (seo.md §2.2).
+ *
+ * The MDX body must NOT repeat the title as a heading — the title is rendered here
+ * from frontmatter (content-owned metadata, seo.md §2.3).
+ */
+import type { JsonLd } from '@/lib/structured-data';
+import Breadcrumb from '@/components/breadcrumb.astro';
+import Icon from '@/components/icon.astro';
+import BaseLayout from './BaseLayout.astro';
+
+type Crumb = { label: string; href?: string | undefined };
+
+interface Props {
+  title: string;
+  description: string;
+  updated?: string | undefined;
+  breadcrumbs: Crumb[];
+  jsonLd?: JsonLd | JsonLd[] | undefined;
+}
+
+const { title, description, updated, breadcrumbs, jsonLd } = Astro.props;
+
+const updatedLabel = updated ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' }).format(new Date(updated)) : null;
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
+    <Breadcrumb items={breadcrumbs} />
+
+    <article>
+      <header class="mb-8 border-b border-border pb-6">
+        <h1 class="font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">{title}</h1>
+        <p class="mt-3 text-lg text-pretty text-lecture">{description}</p>
+        {updatedLabel ? <p class="mt-3 text-sm text-mention">Mis à jour le {updatedLabel}</p> : null}
+      </header>
+
+      <div class="content-prose">
+        <slot />
+      </div>
+    </article>
+
+    <aside class="mt-12 rounded-3xl border border-border brume-field p-6 sm:p-8">
+      <p class="font-heading text-lg font-semibold text-encre">Comparez vos statuts sur vos propres chiffres</p>
+      <p class="mt-2 text-sm text-lecture">
+        Le simulateur classe les 7 statuts par revenu disponible à partir de votre chiffre d'affaires et de votre situation.
+      </p>
+      <a
+        href="/comparateur/"
+        class="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-france px-6 text-sm font-semibold text-white shadow-[var(--glass-shadow)] transition-colors hover:bg-france-hover"
+      >
+        Lancer le simulateur gratuit
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </aside>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  .content-prose {
+    line-height: 1.7;
+    color: var(--lecture);
+  }
+  .content-prose > * + * {
+    margin-top: 1rem;
+  }
+  .content-prose h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--encre);
+  }
+  .content-prose h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--encre);
+  }
+  .content-prose ul,
+  .content-prose ol {
+    margin-left: 1.25rem;
+  }
+  .content-prose ul {
+    list-style: disc;
+  }
+  .content-prose ol {
+    list-style: decimal;
+  }
+  .content-prose li + li {
+    margin-top: 0.375rem;
+  }
+  .content-prose a {
+    color: var(--france);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+  .content-prose a:hover {
+    color: var(--france-hover);
+  }
+  .content-prose strong {
+    font-weight: 600;
+    color: var(--encre);
+  }
+  .content-prose code {
+    border-radius: 0.375rem;
+    background: var(--brume-deep);
+    padding: 0.15rem 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--encre);
+  }
+  .content-prose blockquote {
+    border-left: 3px solid var(--france);
+    padding-left: 1rem;
+    color: var(--mention);
+    font-style: italic;
+  }
+</style>

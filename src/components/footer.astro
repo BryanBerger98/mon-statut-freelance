@@ -1,0 +1,86 @@
+---
+/**
+ * Site footer — static chrome (components.md §1.5). Opens with a site-wide
+ * call-to-action, then gives every status page an inbound internal link
+ * (seo.md §2.2 no orphans) and carries the mandatory non-advice notice. Status
+ * labels come from the shared `STATUS_META` source.
+ */
+import Icon from '@/components/icon.astro';
+import { STATUS_META } from '@/features/simulator/status-meta';
+
+const statuses = Object.values(STATUS_META);
+
+const ressources = [
+  { href: '/comparateur/', label: 'Simulateur gratuit' },
+  { href: '/guides/', label: 'Guides' },
+  { href: '/glossaire/', label: 'Glossaire' },
+];
+---
+
+<footer class="mt-20 border-t border-border brume-field">
+  <div class="mx-auto max-w-5xl px-4">
+    <div class="flex flex-col items-center gap-5 border-b border-border py-10 text-center sm:flex-row sm:justify-between sm:text-left">
+      <div>
+        <p class="font-heading text-lg font-bold tracking-tight text-encre">Comparez vos statuts en quelques minutes</p>
+        <p class="mt-1 text-sm text-lecture">Gratuit, sans inscription. Chiffres de référence 2026.</p>
+      </div>
+      <a
+        href="/comparateur/"
+        class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-france px-6 text-sm font-semibold text-white transition-colors hover:bg-france-hover"
+      >
+        Lancer le simulateur
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+
+    <div class="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="flex size-8 items-center justify-center rounded-full bg-france text-white">
+            <Icon name="scale" size={18} />
+          </span>
+          <p class="font-heading text-sm font-bold tracking-tight text-encre">Mon statut freelance</p>
+        </div>
+        <p class="mt-3 max-w-xs text-sm text-lecture">
+          Le comparateur gratuit des statuts juridiques du freelance en France. Classement chiffré par revenu disponible, pour
+          l'année 2026.
+        </p>
+      </div>
+
+      <nav aria-label="Les statuts">
+        <p class="text-sm font-semibold text-encre">Les statuts</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          {
+            statuses.map((status) => (
+              <li>
+                <a class="text-lecture transition-colors hover:text-france" href={`/statuts/${status.id}/`}>
+                  {status.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Ressources">
+        <p class="text-sm font-semibold text-encre">Ressources</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          {
+            ressources.map((item) => (
+              <li>
+                <a class="text-lecture transition-colors hover:text-france" href={item.href}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <p class="border-t border-border py-6 text-xs text-mention">
+      Les résultats de ce site sont des estimations indicatives pour l'année 2026 et ne constituent pas un conseil juridique ou
+      fiscal personnalisé. Pour une décision engageante, consultez un expert-comptable ou un avocat.
+    </p>
+  </div>
+</footer>

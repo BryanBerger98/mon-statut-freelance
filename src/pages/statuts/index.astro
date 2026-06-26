@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/breadcrumb.astro';
+import Icon from '@/components/icon.astro';
+import { STATUS_META } from '@/features/simulator/status-meta';
+import { breadcrumbLd } from '@/lib/structured-data';
+
+const statuses = Object.values(STATUS_META);
+
+const jsonLd = breadcrumbLd([
+  { name: 'Accueil', url: new URL('/', Astro.site).href },
+  { name: 'Statuts' },
+]);
+---
+
+<BaseLayout
+  title="Les 7 statuts du freelance en France — comparatif"
+  description="Micro-entreprise, EI au réel, EURL, SASU, portage salarial : régime social, fiscalité, avantages et limites de chaque statut juridique du freelance."
+  jsonLd={jsonLd}
+>
+  <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-10">
+    <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Statuts' }]} />
+
+    <h1 class="font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">
+      Les statuts du freelance en France
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-pretty text-lecture">
+      Les 7 formes individuelles (un seul associé) pour exercer en indépendant. Comparez-les en détail, puis classez-les sur vos
+      chiffres avec le <a class="font-medium text-france underline-offset-4 hover:underline" href="/comparateur/">simulateur</a>.
+    </p>
+
+    <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        statuses.map((status) => (
+          <li>
+            <a
+              href={`/statuts/${status.id}/`}
+              class="group/card flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-france/30 hover:shadow-[var(--glass-shadow)]"
+            >
+              <span class="inline-flex w-fit rounded-full bg-france/8 px-2.5 py-0.5 text-xs font-medium text-france">
+                {status.regimeSocial}
+              </span>
+              <span class="mt-3 font-heading font-semibold text-encre">{status.label}</span>
+              <span class="mt-1 flex-1 text-sm text-lecture">{status.tagline}</span>
+              <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-france opacity-0 transition-opacity group-hover/card:opacity-100">
+                Voir la fiche
+                <Icon name="arrow-right" size={14} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</BaseLayout>

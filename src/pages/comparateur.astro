@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/icon.astro';
+import Simulator from '@/features/simulator/Simulator';
+import { breadcrumbLd, webApplicationLd } from '@/lib/structured-data';
+
+const url = new URL('/comparateur/', Astro.site).href;
+const jsonLd = [
+  webApplicationLd({
+    name: 'Simulateur des statuts freelance',
+    description: 'Comparateur gratuit qui classe les 7 statuts du freelance par revenu disponible après cotisations et impôt.',
+    url,
+  }),
+  breadcrumbLd([
+    { name: 'Accueil', url: new URL('/', Astro.site).href },
+    { name: 'Comparateur' },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Simulateur des statuts freelance — 2026"
+  description="Comparez en chiffres micro-entreprise, EI, EURL, SASU et portage salarial : classement par revenu disponible après cotisations et impôt."
+  jsonLd={jsonLd}
+>
+  <main class="mx-auto w-full max-w-[1320px] flex-1 px-4 py-10 lg:px-8">
+    <p class="inline-flex items-center gap-2 rounded-full border border-france/15 bg-brume px-3 py-1 text-xs font-medium text-france">
+      <Icon name="sparkles" size={14} />
+      Simulateur gratuit · 7 statuts · 2026
+    </p>
+    <h1 class="mt-5 font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">
+      Simulateur des statuts freelance
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-pretty text-lecture">
+      Renseignez votre chiffre d'affaires, vos charges et votre situation familiale. Le simulateur classe les 7 statuts par
+      <strong class="font-semibold text-encre">revenu disponible</strong> après cotisations sociales et impôt, et explique
+      la recommandation.
+    </p>
+
+    <!-- Above-the-fold interactive island : client:idle (react.md §1.2, seo.md §1.6).
+         The brume-field is the backdrop the glass cards read against (global.css §4.3). -->
+    <div class="brume-field mt-8 rounded-3xl border border-france/10 p-4 sm:p-6 lg:p-8">
+      <Simulator client:idle />
+    </div>
+
+    <section class="mt-12 border-t border-border pt-8">
+      <h2 class="font-heading text-lg font-semibold text-encre">Pour aller plus loin</h2>
+      <p class="mt-2 text-sm text-lecture">
+        Consultez le détail de chaque statut (régime social, fiscalité, parcours de création) sur les
+        <a class="font-medium text-france underline-offset-4 hover:underline" href="/statuts/">fiches statuts</a>, ou
+        lisez nos <a class="font-medium text-france underline-offset-4 hover:underline" href="/guides/">guides</a>
+        pour comprendre les mécanismes.
+      </p>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Environment / secrets
+*.local
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+*.pem
+
+# Editor
+.vscode/
+.idea/
+
+# pnpm
+.pnpm-store/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# Claude
+.claude/

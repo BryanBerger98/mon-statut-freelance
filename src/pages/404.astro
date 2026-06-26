@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/icon.astro';
+---
+
+<BaseLayout title="Page introuvable (404)" description="Cette page n'existe pas ou a été déplacée. Retrouvez le simulateur et les statuts du freelance.">
+  <main class="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-24 text-center">
+    <p class="inline-flex items-center gap-2 rounded-full border border-france/15 bg-brume px-3 py-1 text-xs font-semibold uppercase tracking-wide text-france">
+      Erreur 404
+    </p>
+    <h1 class="mt-5 font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">
+      Cette page est introuvable
+    </h1>
+    <p class="mt-4 text-lg text-pretty text-lecture">
+      Le lien est peut-être erroné ou la page a été déplacée. Reprenez depuis l'une de ces destinations.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/comparateur/"
+        class="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-france px-6 text-sm font-semibold text-white shadow-[var(--glass-shadow)] transition-colors hover:bg-france-hover"
+      >
+        Lancer le simulateur
+        <Icon name="arrow-right" size={16} />
+      </a>
+      <a
+        href="/"
+        class="inline-flex h-11 items-center justify-center rounded-full border border-france/20 bg-white/60 px-6 text-sm font-semibold text-france transition-colors hover:border-france/40 hover:bg-white"
+      >
+        Retour à l'accueil
+      </a>
+      <a
+        href="/statuts/"
+        class="inline-flex h-11 items-center justify-center rounded-full border border-france/20 bg-white/60 px-6 text-sm font-semibold text-france transition-colors hover:border-france/40 hover:bg-white"
+      >
+        Voir les statuts
+      </a>
+    </div>
+  </main>
+</BaseLayout>

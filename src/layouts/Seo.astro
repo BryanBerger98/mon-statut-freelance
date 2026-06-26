@@ -1,0 +1,60 @@
+---
+/**
+ * <Seo> — single source of truth for all head SEO tags (seo.md §1.2, §1.4).
+ * Every page feeds this component; no ad-hoc <title> or <meta> in pages.
+ */
+import { type JsonLd, serializeJsonLd } from '@/lib/structured-data';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute canonical URL. Falls back to Astro.site + current path. */
+  canonical?: string | undefined;
+  /** Absolute OG image URL. */
+  image?: string | undefined;
+  /** Structured data (seo.md §1.4) — one or many schema.org nodes, emitted as JSON-LD. */
+  jsonLd?: JsonLd | JsonLd[] | undefined;
+}
+
+const {
+  title,
+  description,
+  canonical = new URL(Astro.url.pathname, Astro.site).href,
+  image = new URL('/og-default.png', Astro.site).href,
+  jsonLd,
+} = Astro.props;
+
+const ldNodes = jsonLd === undefined ? [] : Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+
+// Enforce title / description constraints (seo.md §1.2)
+if (title.length > 60) {
+  console.warn(`[Seo] title exceeds 60 chars (${title.length}): "${title}"`);
+}
+if (description.length > 155) {
+  console.warn(`[Seo] description exceeds 155 chars (${description.length})`);
+}
+---
+
+<!-- Primary -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<!-- OpenGraph (seo.md §1.7) -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={image} />
+<meta property="og:locale" content="fr_FR" />
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+
+<!-- Structured data (JSON-LD) — injected at build time, never from an island (seo.md §1.4) -->
+{ldNodes.map((node) => <script is:inline type="application/ld+json" set:html={serializeJsonLd(node)} />)}

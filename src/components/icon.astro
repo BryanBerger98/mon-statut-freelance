@@ -1,0 +1,37 @@
+---
+/**
+ * Inline lucide icon for zero-JS Astro chrome (see `icons.ts`). Renders the raw
+ * SVG inner markup with lucide's stroke defaults. Decorative by default
+ * (`aria-hidden`); pass `title` to expose an accessible name.
+ */
+import { ICONS, type IconName } from './icons';
+
+type Props = {
+  name: IconName;
+  size?: number;
+  class?: string;
+  strokeWidth?: number;
+  title?: string;
+};
+
+const { name, size = 24, class: className, strokeWidth = 2, title } = Astro.props;
+const inner = ICONS[name];
+const labelled = Boolean(title);
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  role={labelled ? 'img' : undefined}
+  aria-label={labelled ? title : undefined}
+  aria-hidden={labelled ? undefined : 'true'}
+  set:html={inner}
+/>

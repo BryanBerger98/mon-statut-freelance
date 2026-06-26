@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { articleLd, breadcrumbLd } from '@/lib/structured-data';
+
+export const getStaticPaths = async () => {
+  const guides = await getCollection('guides');
+  return guides.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+};
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const url = new URL(`/guides/${entry.id}/`, Astro.site).href;
+
+const breadcrumbs = [
+  { label: 'Accueil', href: '/' },
+  { label: 'Guides', href: '/guides/' },
+  { label: entry.data.title },
+];
+
+const jsonLd = [
+  articleLd({ headline: entry.data.title, description: entry.data.description, url, updated: entry.data.updated }),
+  breadcrumbLd([
+    { name: 'Accueil', url: new URL('/', Astro.site).href },
+    { name: 'Guides', url: new URL('/guides/', Astro.site).href },
+    { name: entry.data.title },
+  ]),
+];
+---
+
+<ContentLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  updated={entry.data.updated}
+  breadcrumbs={breadcrumbs}
+  jsonLd={jsonLd}
+>
+  <Content />
+</ContentLayout>

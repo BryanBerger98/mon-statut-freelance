@@ -1,0 +1,277 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Fonts: latin + latin-ext only (FR audience). Fontsource ships a single
+   index.css covering 5 subsets (incl. cyrillic/vietnamese) — importing it copies
+   every subset into dist. We inline only the two latin @font-face blocks per
+   family instead. unicode-range values are copied verbatim from the package's
+   index.css; re-sync them on a fontsource version bump. The latin woff2 of the
+   display family is preloaded in BaseLayout. */
+
+/* Bricolage Grotesque Variable — display */
+@font-face {
+  font-family: 'Bricolage Grotesque Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* Geist Variable — body sans */
+@font-face {
+  font-family: 'Geist Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/geist/files/geist-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Geist Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/geist/files/geist-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* Geist Mono Variable — code/figures */
+@font-face {
+  font-family: 'Geist Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Geist Mono Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/geist-mono/files/geist-mono-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* Kept so `dark:` utilities still compile (button.tsx); no `.dark` ruleset ships
+   yet — dark mode is deferred (design spec §5 #19). */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    /* Custom utility alias; the stacks live in :root (so `var(--font-display)`
+       resolves — `@theme inline` does not emit its vars to :root). --font-sans
+       and --font-mono are overridden directly in :root below. */
+    --font-heading: var(--font-display);
+
+    /* DSFR-derived identity tokens (design spec §4.3) */
+    --color-france: var(--france);
+    --color-france-hover: var(--france-hover);
+    --color-france-active: var(--france-active);
+    --color-marianne: var(--marianne);
+    --color-brume: var(--brume);
+    --color-brume-deep: var(--brume-deep);
+    --color-encre: var(--encre);
+    --color-lecture: var(--lecture);
+    --color-mention: var(--mention);
+
+    /* Simulator semantic tokens */
+    --color-positive: var(--positive);
+    --color-positive-foreground: var(--positive-foreground);
+    --color-attention: var(--attention);
+    --color-attention-foreground: var(--attention-foreground);
+    --color-surface: var(--surface);
+    --color-surface-foreground: var(--surface-foreground);
+
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* === Typography stacks (raw values — referenced by @theme + Tailwind) === */
+    --font-display: 'Bricolage Grotesque Variable', sans-serif;
+    --font-sans: 'Geist Variable', sans-serif;
+    --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+
+    /* === DSFR-derived raw palette — "couleurs de l'État, formes du produit" ===
+       Hex values verified against the official Système de Design de l'État.
+       Contrast ratios proven in design spec §4.3. */
+    --france: #000091; /* blue-france-sun-113-625 — 14.9:1 on white */
+    --france-hover: #1212ff;
+    --france-active: #2323ff;
+    --marianne: #e1000f; /* red-marianne-main-472 — large/short labels & accents only */
+    --brume: #f5f5fe; /* blue-france-975-75 — glass backdrop field */
+    --brume-deep: #e3e3fd; /* blue-france-925-125 — gradient end */
+    --encre: #161616; /* grey-50-1000 — 18.1:1 */
+    --lecture: #3a3a3a; /* grey-200-850 — body text, 11.4:1 */
+    --mention: #666666; /* grey-425-625 — captions, 5.7:1 */
+    --trait: #929292; /* grey-625-425 — strong borders / disabled (never text) */
+
+    /* === Glass composition (design spec §4.3). The media query below swaps the
+       backing values under prefers-reduced-transparency — no specificity war. === */
+    --glass-bg: rgb(255 255 255 / 0.72); /* text-bearing cards: 0.72 floor */
+    --glass-pill-bg: rgb(255 255 255 / 0.80); /* pill: robust on any backdrop */
+    --glass-blur: 16px;
+    --glass-border: rgb(255 255 255 / 0.60);
+    --glass-shadow: 0 8px 24px rgb(0 0 145 / 0.10);
+
+    /* === shadcn semantic tokens, mapped onto the DSFR palette === */
+    --background: #ffffff;
+    --foreground: var(--encre);
+    --card: #ffffff;
+    --card-foreground: var(--encre);
+    --popover: #ffffff;
+    --popover-foreground: var(--encre);
+    --primary: var(--france);
+    --primary-foreground: #ffffff;
+    --secondary: var(--brume-deep);
+    --secondary-foreground: var(--encre);
+    --muted: var(--brume);
+    --muted-foreground: var(--mention);
+    --accent: var(--brume);
+    --accent-foreground: var(--france);
+    --destructive: oklch(0.55 0.2 27.325);
+    --border: #e6e6f0; /* faint blue-grey hairline */
+    --input: var(--trait); /* #929292 — UI ≥ 3:1 */
+    --ring: var(--france); /* focus ring */
+
+    /* === Simulator tokens — the "best" status reads in Bleu France by saturation,
+       not a separate accent (design decision: tout en Bleu France) === */
+    --positive: oklch(0.5 0.1 162); /* #157254 — 5.7:1 */
+    --positive-foreground: #ffffff;
+    --attention: oklch(0.5 0.12 65);
+    --attention-foreground: #ffffff;
+    --surface: var(--brume);
+    --surface-foreground: var(--encre);
+    --chart-1: var(--france);
+    --chart-2: var(--marianne);
+    --chart-3: oklch(0.5 0.1 162);
+    --chart-4: oklch(0.5 0.12 65);
+    --chart-5: var(--mention);
+
+    --radius: 0.875rem; /* 14px — buttons; cards use rounded-xl ≈ 20px */
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    :root {
+        --glass-bg: #ffffff;
+        --glass-pill-bg: #ffffff;
+        --glass-blur: 0px;
+    }
+}
+
+/* Glass surfaces — cards (text-bearing) and the pill (any backdrop). */
+@utility glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+@utility glass-pill {
+    background: var(--glass-pill-bg);
+    backdrop-filter: blur(calc(var(--glass-blur) * 0.75));
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 0.75));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+/* Winner card — glass with a saturated Bleu France left rail (the simulator "best"
+   status; no separate accent colour — design decision "tout en Bleu France"). The
+   longhand `border-left` after the shorthand wins, so the other three sides keep the
+   glass hairline. */
+@utility glass-card-winner {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-left: 3px solid var(--france);
+    box-shadow: var(--glass-shadow);
+}
+
+/* Quiet glass — secondary panels recede: same translucency, no lift. */
+@utility glass-card-quiet {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: none;
+}
+
+/* Brume field — the only backdrop allowed behind text-bearing glass (§4.3). */
+@utility brume-field {
+    background:
+        radial-gradient(60% 60% at 15% 0%, var(--brume-deep) 0%, transparent 60%),
+        radial-gradient(50% 50% at 100% 20%, var(--brume-deep) 0%, transparent 55%),
+        var(--brume);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    /* Solid, glass-surviving focus (design spec §4.9). Replaces the broken
+       `outline-ring/50` (no width/style). shadcn buttons keep their own
+       ring-based focus via the `outline-none` utility which wins over base. */
+    :focus-visible {
+        outline: 2px solid var(--france);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    html {
+        @apply font-sans;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumb from '@/components/breadcrumb.astro';
+import Icon from '@/components/icon.astro';
+import { breadcrumbLd } from '@/lib/structured-data';
+
+const guides = (await getCollection('guides')).sort((a, b) => (b.data.updated ?? '').localeCompare(a.data.updated ?? ''));
+
+const jsonLd = breadcrumbLd([
+  { name: 'Accueil', url: new URL('/', Astro.site).href },
+  { name: 'Guides' },
+]);
+---
+
+<BaseLayout
+  title="Guides pour choisir son statut freelance"
+  description="Nos guides pour comprendre et choisir votre statut juridique de freelance : micro-entreprise, EI, EURL, SASU, portage salarial."
+  jsonLd={jsonLd}
+>
+  <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
+    <Breadcrumb items={[{ label: 'Accueil', href: '/' }, { label: 'Guides' }]} />
+
+    <h1 class="font-heading text-3xl font-bold tracking-tight text-balance text-encre sm:text-4xl">Guides</h1>
+    <p class="mt-4 max-w-2xl text-lg text-pretty text-lecture">
+      Comprendre les mécanismes fiscaux et sociaux pour choisir le bon statut, puis lancer le
+      <a class="font-medium text-france underline-offset-4 hover:underline" href="/comparateur/">simulateur</a>.
+    </p>
+
+    {
+      guides.length === 0 ? (
+        <p class="mt-10 text-lecture">Les guides arrivent bientôt.</p>
+      ) : (
+        <ul class="mt-10 space-y-4">
+          {guides.map((guide) => (
+            <li>
+              <a
+                href={`/guides/${guide.id}/`}
+                class="group/card flex flex-col rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-france/30 hover:shadow-[var(--glass-shadow)]"
+              >
+                <span class="font-heading font-semibold text-encre">{guide.data.title}</span>
+                <span class="mt-1.5 text-sm text-lecture">{guide.data.description}</span>
+                <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-france opacity-0 transition-opacity group-hover/card:opacity-100">
+                  Lire le guide
+                  <Icon name="arrow-right" size={14} />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+</BaseLayout>

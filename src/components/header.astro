@@ -1,0 +1,108 @@
+---
+/**
+ * Site header — static chrome (components.md §1.5). A floating, centered glass
+ * "pill": brand on the left, primary nav in the middle (desktop), a `Simuler`
+ * call-to-action on the right. Zero JS — the mobile menu uses a native
+ * `<details>` disclosure. The active route is resolved at build time from the
+ * page pathname (one build per route in static mode, stable per page).
+ */
+import Icon from '@/components/icon.astro';
+
+const path = Astro.url.pathname;
+
+// `/comparateur` is intentionally absent: the `Simuler` CTA on the right is its
+// single entry point (no duplicate nav link).
+const navItems = [
+  { href: '/statuts/', label: 'Statuts' },
+  { href: '/guides/', label: 'Guides' },
+  { href: '/glossaire/', label: 'Glossaire' },
+];
+
+// Hrefs end with `/` (trailingSlash: 'always'), and so does `path`. A prefix
+// match marks both the section index (`/statuts/`) and its children
+// (`/statuts/micro-entreprise/`) active; the boundary slash prevents `/statuts/`
+// from matching an unrelated `/statutsX/`.
+const isActive = (href: string) => path.startsWith(href);
+---
+
+<header class="sticky top-3 z-50 mx-auto mt-3 w-full max-w-3xl px-4">
+  <div class="glass-pill flex items-center justify-between gap-2 rounded-full py-1.5 pr-1.5 pl-2">
+    <a
+      href="/"
+      class="flex items-center gap-2 rounded-full py-1 pr-2 pl-1 transition-colors hover:bg-france/5"
+    >
+      <span class="flex size-8 items-center justify-center rounded-full bg-france text-white">
+        <Icon name="scale" size={18} />
+      </span>
+      <span class="font-heading text-[0.95rem] font-bold tracking-tight text-encre"> Mon statut freelance </span>
+    </a>
+
+    <nav class="hidden md:block" aria-label="Navigation principale">
+      <ul class="flex items-center gap-0.5 text-sm">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class:list={[
+                  'rounded-full px-3 py-1.5 transition-colors',
+                  isActive(item.href) ? 'bg-france/10 font-semibold text-france' : 'text-lecture hover:bg-france/5 hover:text-france',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-1">
+      <a
+        href="/comparateur/"
+        class="hidden items-center gap-1.5 rounded-full bg-france px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-france-hover md:inline-flex"
+      >
+        Simuler
+        <Icon name="arrow-right" size={16} />
+      </a>
+
+      <details class="relative md:hidden">
+        <summary
+          class="flex size-9 cursor-pointer list-none items-center justify-center rounded-full text-encre transition-colors hover:bg-france/5 [&::-webkit-details-marker]:hidden"
+        >
+          <Icon name="menu" size={20} title="Ouvrir le menu" />
+        </summary>
+        <div class="glass-card absolute right-0 top-[calc(100%+0.75rem)] z-50 w-60 rounded-2xl p-2">
+          <nav aria-label="Menu mobile">
+            <ul class="flex flex-col gap-0.5 text-sm">
+              {
+                navItems.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      aria-current={isActive(item.href) ? 'page' : undefined}
+                      class:list={[
+                        'block rounded-xl px-3 py-2 transition-colors',
+                        isActive(item.href) ? 'bg-france/10 font-semibold text-france' : 'text-lecture hover:bg-france/5 hover:text-france',
+                      ]}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+          <a
+            href="/comparateur/"
+            class="mt-1 flex items-center justify-center gap-1.5 rounded-xl bg-france px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-france-hover"
+          >
+            Simuler maintenant
+            <Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

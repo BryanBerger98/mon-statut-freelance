@@ -1,0 +1,66 @@
+---
+import type { JsonLd } from '@/lib/structured-data';
+import Footer from '@/components/footer.astro';
+import Header from '@/components/header.astro';
+import Seo from './Seo.astro';
+import '../styles/global.css';
+// Fingerprinted URL of the critical display font (h1/hero — the LCP element).
+// Preloaded below so the browser fetches it in parallel with the CSS instead of
+// discovering it only after the stylesheet parses. `?url` returns the same hashed
+// asset the @font-face in global.css resolves to, so there is no double download.
+import bricolageLatinUrl from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string | undefined;
+  image?: string | undefined;
+  jsonLd?: JsonLd | JsonLd[] | undefined;
+}
+
+const { title, description, canonical, image, jsonLd } = Astro.props;
+
+// A page may fill the `hero` slot. When it does, the floating header and that
+// hero share ONE brume-field container, so the backdrop reaches the very top of
+// the page behind the pill — no seam, no header-height magic number. Pages
+// without a hero (statuts, guides, glossaire…) render the header on its own and
+// keep a white top.
+const hasHero = Astro.slots.has('hero');
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <Seo
+      title={title}
+      description={description}
+      canonical={canonical}
+      image={image}
+      jsonLd={jsonLd}
+    />
+    <link
+      rel="preload"
+      href={bricolageLatinUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="flex min-h-screen flex-col bg-background text-foreground">
+    {
+      hasHero ? (
+        <div class="brume-field">
+          <Header />
+          <slot name="hero" />
+        </div>
+      ) : (
+        <Header />
+      )
+    }
+    <div class="flex flex-1 flex-col">
+      <slot />
+    </div>
+    <Footer />
+  </body>
+</html>
