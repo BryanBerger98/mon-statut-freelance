@@ -20,11 +20,12 @@ interface Props {
 
 const { title, description, canonical, image, jsonLd } = Astro.props;
 
-// A page may fill the `hero` slot. When it does, the floating header and that
-// hero share ONE brume-field container, so the backdrop reaches the very top of
-// the page behind the pill — no seam, no header-height magic number. Pages
-// without a hero (statuts, guides, glossaire…) render the header on its own and
-// keep a white top.
+// A page may fill the `hero` slot. When it does, a decorative brume-field layer
+// is painted BEHIND the hero — and up behind the floating pill — as an absolutely
+// positioned element, never as the header's parent. Wrapping the header would
+// bound its `position: sticky` to the hero's height, so it would unstick at the
+// hero's bottom; keeping the header a direct child of <body> lets it stay stuck
+// to the whole page. Pages without a hero (statuts, guides…) keep a white top.
 const hasHero = Astro.slots.has('hero');
 ---
 
@@ -48,15 +49,18 @@ const hasHero = Astro.slots.has('hero');
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="flex min-h-screen flex-col bg-background text-foreground">
+    <Header />
     {
       hasHero ? (
-        <div class="brume-field">
-          <Header />
+        <div class="relative">
+          {/* Decorative brume backdrop, painted as an absolute layer (never the
+              header's parent — see comment above). `-top-16` ≈ the header's
+              reserved height, so the gradient reaches the page top behind the
+              floating pill; `bottom-0` snaps it to the hero's lower edge. */}
+          <div class="brume-field pointer-events-none absolute inset-x-0 -top-16 bottom-0 -z-10" aria-hidden="true" />
           <slot name="hero" />
         </div>
-      ) : (
-        <Header />
-      )
+      ) : null
     }
     <div class="flex flex-1 flex-col">
       <slot />
