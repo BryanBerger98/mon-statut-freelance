@@ -15,6 +15,13 @@ const ressources = [
   { href: '/guides/', label: 'Guides' },
   { href: '/glossaire/', label: 'Glossaire' },
 ];
+
+const legal = [
+  { href: '/mentions-legales/', label: 'Mentions légales' },
+  { href: '/politique-de-confidentialite/', label: 'Politique de confidentialité' },
+];
+
+const year = new Date().getFullYear();
 ---
 
 <footer class="mt-20 border-t border-border brume-field">
@@ -45,6 +52,15 @@ const ressources = [
           Le comparateur gratuit des statuts juridiques du freelance en France. Classement chiffré par revenu disponible, pour
           l'année 2026.
         </p>
+        <a
+          href="https://github.com/BryanBerger98/mon-statut-freelance"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-4 inline-flex items-center gap-2 text-sm text-lecture transition-colors hover:text-france"
+        >
+          <Icon name="github" size={18} />
+          Code source sur GitHub
+        </a>
       </div>
 
       <nav aria-label="Les statuts">
@@ -78,9 +94,23 @@ const ressources = [
       </nav>
     </div>
 
-    <p class="border-t border-border py-6 text-xs text-mention">
-      Les résultats de ce site sont des estimations indicatives pour l'année 2026 et ne constituent pas un conseil juridique ou
-      fiscal personnalisé. Pour une décision engageante, consultez un expert-comptable ou un avocat.
-    </p>
+    <div class="border-t border-border py-6">
+      <p class="text-xs text-mention">
+        Les résultats de ce site sont des estimations indicatives pour l'année 2026 et ne constituent pas un conseil juridique
+        ou fiscal personnalisé. Pour une décision engageante, consultez un expert-comptable ou un avocat.
+      </p>
+      <div class="mt-4 flex flex-col gap-3 text-xs text-mention sm:flex-row sm:items-center sm:justify-between">
+        <p>© {year} Bryan Berger · Mon statut freelance</p>
+        <nav aria-label="Informations légales" class="flex flex-wrap gap-x-4 gap-y-1">
+          {
+            legal.map((item) => (
+              <a class="transition-colors hover:text-france" href={item.href}>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </div>
   </div>
 </footer>
