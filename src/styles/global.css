@@ -199,10 +199,13 @@
 }
 
 /* Glass surfaces — cards (text-bearing) and the pill (any backdrop). */
+/* Only the standard `backdrop-filter` is authored; lightningcss adds the
+   `-webkit-` prefix at build time per the browser targets. Writing both by hand
+   makes lightningcss dedupe the pair and drop the unprefixed one, which kills the
+   blur in Firefox (it has no `-webkit-backdrop-filter`). */
 @utility glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
 }
@@ -210,7 +213,6 @@
 @utility glass-pill {
     background: var(--glass-pill-bg);
     backdrop-filter: blur(calc(var(--glass-blur) * 0.75));
-    -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 0.75));
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
 }
@@ -222,7 +224,6 @@
 @utility glass-card-winner {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-left: 3px solid var(--france);
     box-shadow: var(--glass-shadow);
@@ -232,7 +233,6 @@
 @utility glass-card-quiet {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     box-shadow: none;
 }
