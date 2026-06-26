@@ -1,9 +1,10 @@
 ---
 /**
- * Politique de confidentialité (RGPD). The site is fully static, collects no
- * personal data, sets no cookie or tracker, self-hosts its fonts and runs the
- * simulator entirely client-side (state encoded in the URL, never transmitted).
- * The only personal-data processing is the host's technical server logs.
+ * Politique de confidentialité (RGPD). The site is fully static, sets no cookie,
+ * self-hosts its fonts, and runs the simulator entirely client-side (state encoded
+ * in the URL, never transmitted). Audience is measured with a self-hosted, cookieless
+ * Umami instance (first-party, anonymous, consent-exempt under the CNIL guidelines).
+ * Other personal-data processing is limited to the host's technical server logs.
  *
  * `updated` drives the "Mis à jour le" line; bump it whenever the policy changes.
  */
@@ -20,7 +21,7 @@ const jsonLd = breadcrumbLd([
 
 <ContentLayout
   title="Politique de confidentialité"
-  description="Mon statut freelance ne collecte aucune donnée personnelle, n'utilise aucun cookie ni traceur. Le simulateur fonctionne entièrement dans votre navigateur."
+  description="Mon statut freelance n'utilise aucun cookie. La mesure d'audience est anonyme et le simulateur fonctionne entièrement dans votre navigateur."
   updated="2026-06-26"
   breadcrumbs={breadcrumbs}
   jsonLd={jsonLd}
@@ -28,7 +29,8 @@ const jsonLd = breadcrumbLd([
   <p>
     Cette politique explique comment le site <strong>mon-statut-freelance.fr</strong> traite vos données, conformément au
     Règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés. En résumé&nbsp;:
-    <strong>le site ne collecte aucune donnée personnelle</strong> et n'utilise ni cookie ni traceur.
+    <strong>le site n'utilise aucun cookie</strong>, ne collecte aucune donnée personnelle identifiante et mesure son
+    audience de façon anonyme.
   </p>
 
   <h2>Responsable du traitement</h2>
@@ -42,7 +44,8 @@ const jsonLd = breadcrumbLd([
   <p>
     Le site est un site statique, sans compte utilisateur, sans formulaire d'inscription et sans espace de connexion. Il ne
     demande, ne collecte et ne stocke <strong>aucune donnée personnelle</strong>&nbsp;: ni nom, ni adresse électronique, ni
-    coordonnées. Aucune mesure d'audience ni outil d'analyse comportementale n'est utilisé.
+    coordonnées. Aucun outil d'analyse comportementale ni profilage individuel n'est utilisé&nbsp;: la seule mesure
+    d'audience réalisée est anonyme et agrégée (voir la section «&nbsp;Mesure d'audience&nbsp;» ci-dessous).
   </p>
 
   <h2>Données saisies dans le simulateur</h2>
@@ -56,15 +59,41 @@ const jsonLd = breadcrumbLd([
 
   <h2>Cookies et traceurs</h2>
   <p>
-    Le site n'utilise <strong>aucun cookie</strong> et <strong>aucun traceur</strong> (ni publicitaire, ni statistique, ni
-    de réseau social). Aucun consentement n'est donc requis et aucun bandeau cookie n'est affiché.
+    Le site n'utilise <strong>aucun cookie</strong> et <strong>aucun traceur publicitaire ou de réseau social</strong>. La
+    mesure d'audience décrite ci-dessous fonctionne sans cookie et de manière anonyme&nbsp;: aucun consentement n'est donc
+    requis et aucun bandeau cookie n'est affiché.
+  </p>
+
+  <h2>Mesure d'audience</h2>
+  <p>
+    Le site mesure sa fréquentation avec <strong>Umami</strong>, une solution libre <strong>auto-hébergée</strong> sur
+    l'infrastructure de l'éditeur (sous-domaine <code>stats.mon-statut-freelance.fr</code>, hébergé en France). Aucune donnée
+    n'est partagée avec un service tiers et votre adresse IP n'est transmise à aucun tiers.
+  </p>
+  <p>
+    Cette mesure fonctionne <strong>sans cookie</strong> et <strong>sans identifiant persistant</strong>. Elle ne produit que
+    des statistiques <strong>anonymes et agrégées</strong>&nbsp;: pages consultées, page d'origine (référent), type
+    d'appareil et de navigateur, et pays approximatif déduit de l'adresse IP. Cette dernière n'est <strong>ni affichée ni
+    conservée</strong>&nbsp;: elle sert uniquement, le temps de la visite, à dériver un identifiant temporaire renouvelé
+    chaque jour, qui ne permet ni de vous identifier ni de vous suivre d'un site à l'autre.
+  </p>
+  <p>
+    Ces statistiques de fréquentation sont conservées <strong>13&nbsp;mois au maximum</strong>, puis automatiquement
+    supprimées — une durée inférieure au plafond de 25&nbsp;mois recommandé par la CNIL pour la mesure d'audience.
+  </p>
+  <p>
+    Aucun profilage individuel ni suivi comportemental n'est réalisé. Conformément aux lignes directrices de la Commission
+    nationale de l'informatique et des libertés (CNIL), une mesure d'audience strictement limitée à l'usage propre du site,
+    anonyme et sans recoupement avec d'autres traitements, est <strong>exemptée de consentement</strong>&nbsp;; c'est
+    pourquoi aucun bandeau n'est affiché.
   </p>
 
   <h2>Ressources externes</h2>
   <p>
     Les polices de caractères sont hébergées directement sur le site&nbsp;: aucune ressource n'est chargée depuis un service
-    tiers (pas de Google Fonts, pas de service de mesure, pas de réseau de diffusion de contenu externe). Votre adresse IP
-    n'est donc transmise à aucun tiers lors de la navigation. Le site contient un lien vers
+    tiers (pas de Google Fonts, pas de réseau de diffusion de contenu externe). Le script de mesure d'audience est lui aussi
+    hébergé sur l'infrastructure de l'éditeur (voir «&nbsp;Mesure d'audience&nbsp;»). Votre adresse IP n'est donc transmise à
+    aucun tiers lors de la navigation. Le site contient un lien vers
     <a href="https://github.com/BryanBerger98/mon-statut-freelance" target="_blank" rel="noopener noreferrer">GitHub</a>&nbsp;;
     si vous le suivez, la politique de confidentialité de ce service tiers s'applique.
   </p>

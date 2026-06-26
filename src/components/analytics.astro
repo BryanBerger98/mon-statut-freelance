@@ -1,0 +1,19 @@
+---
+/**
+ * <Analytics> — self-hosted Umami, cookieless audience measurement.
+ *
+ * Emits the tracker ONLY in production builds and ONLY when both env vars are
+ * set, so `pnpm dev` / `pnpm preview` without them stay script-free. The tag is
+ * `is:inline` (Astro must render the third-party <script> verbatim, not bundle
+ * it) and `defer` so it never blocks the critical path — Core Web Vitals safe.
+ *
+ * No cookies, no cross-site tracking, IPs anonymised → exempt from consent
+ * banners under the CNIL audience-measurement exemption. Not an SEO tag, so it
+ * lives here and not in <Seo>.
+ */
+import { PUBLIC_UMAMI_SRC, PUBLIC_UMAMI_WEBSITE_ID } from 'astro:env/client';
+
+const enabled = import.meta.env.PROD && Boolean(PUBLIC_UMAMI_SRC) && Boolean(PUBLIC_UMAMI_WEBSITE_ID);
+---
+
+{enabled && <script is:inline defer src={PUBLIC_UMAMI_SRC} data-website-id={PUBLIC_UMAMI_WEBSITE_ID} />}
